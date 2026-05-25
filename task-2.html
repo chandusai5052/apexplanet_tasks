@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intermediate Web Development Task</title>
+    <style>
+        :root {
+            --primary-color: #1e4d40;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --success-color: #2ecc71;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+        }
+
+        /* CSS Grid for main layout responsiveness */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .card h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+
+        /* Flexbox for Form Elements */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .error-msg {
+            color: var(--accent-color);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Dynamic To-Do List Styling */
+        .todo-input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .todo-input-container input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .todo-list {
+            list-style: none;
+        }
+
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        /* Common Button Styling */
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .delete-btn {
+            background-color: var(--accent-color);
+            padding: 5px 10px;
+            font-size: 0.85rem;
+        }
+
+        /* Media Queries for explicit responsiveness breakpoint */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Intermediate Development Dashboard</h1>
+        <p>Task 2: Responsive Design, Forms, Validation, and DOM Manipulation</p>
+    </header>
+
+    <main class="dashboard-grid">
+        <section class="card">
+            <h2>Contact Us</h2>
+            <form id="contactForm" novalidate>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name">
+                    <div class="error-msg" id="nameError">Name is required.</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email">
+                    <div class="error-msg" id="emailError">Please enter a valid email address.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" rows="4" placeholder="Your message..."></textarea>
+                </div>
+
+                <button type="submit">Submit Form</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <h2>Dynamic Task Manager</h2>
+            <div class="todo-input-container">
+                <input type="text" id="todoInput" placeholder="Add a new task...">
+                <button id="addTodoBtn">Add</button>
+            </div>
+            <ul id="todoList" class="todo-list">
+                </ul>
+        </section>
+    </main>
+
+    <script>
+        // --- Form Validation Logic ---
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nameField = document.getElementById('name');
+            const emailField = document.getElementById('email');
+            const nameError = document.getElementById('nameError');
+            const emailError = document.getElementById('emailError');
+            
+            let isValid = true;
+
+            // Validate Name
+            if (nameField.value.trim() === '') {
+                nameError.style.display = 'block';
+                isValid = false;
+            } else {
+                nameError.style.display = 'none';
+            }
+
+            // Validate Email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailField.value.trim())) {
+                emailError.style.display = 'block';
+                isValid = false;
+            } else {
+                emailError.style.display = 'none';
+            }
+
+            if (isValid) {
+                alert('Form verified and submitted successfully!');
+                this.reset();
+            }
+        });
+
+        const todoInput = document.getElementById('todoInput');
+        const addTodoBtn = document.getElementById('addTodoBtn');
+        const todoList = document.getElementById('todoList');
+
+        function addTask() {
+            const taskText = todoInput.value.trim();
+            if (taskText === '') return;
+
+            // Create list element
+            const li = document.createElement('li');
+            li.className = 'todo-item';
+
+            // Create text node wrapper
+            const span = document.createElement('span');
+            span.textContent = taskText;
+            li.appendChild(span);
+
+            // Create delete button
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Remove';
+            deleteBtn.className = 'delete-btn';
+            
+            // Event listener to remove item dynamically
+            deleteBtn.addEventListener('click', function() {
+                todoList.removeChild(li);
+            });
+
+            li.appendChild(deleteBtn);
+            todoList.appendChild(li);
+            
+            todoInput.value = '';
+        }
+
+        addTodoBtn.addEventListener('click', addTask);
+        
+        // Allow adding task with enter key press
+        todoInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addTask();
+            }
+        });
+    </script>
+
+</body>
+</html>
