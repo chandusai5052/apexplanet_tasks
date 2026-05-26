@@ -1,0 +1,438 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Developer Portfolio & Apps</title>
+    <style>
+        :root {
+            --primary: #1e4d40;
+            --secondary: #2d7260;
+            --dark: #2d3748;
+            --light: #f7fafc;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* --- 1. PORTFOLIO NAVIGATION & HERO --- */
+        nav {
+            background-color: var(--primary);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        nav .logo {
+            color: var(--white);
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav ul a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        nav ul a:hover {
+            opacity: 0.8;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        section {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        section h2 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--light);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        /* --- 2. LOCALSTORAGE NOTE APP STYLING --- */
+        .note-interface {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 600px;
+        }
+
+        .note-interface textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .note-card {
+            background-color: #fffde7;
+            border: 1px solid #fff59d;
+            padding: 20px;
+            border-radius: 6px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .note-card p {
+            white-space: pre-wrap;
+            margin-bottom: 15px;
+        }
+
+        /* --- 3. FILTER & SORT PRODUCT LIST STYLING --- */
+        .controls-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+            background: var(--light);
+            padding: 15px;
+            border-radius: 6px;
+            align-items: center;
+        }
+
+        .controls-bar select {
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            font-size: 1rem;
+            background-color: var(--white);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            background: var(--white);
+            transition: transform 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-info h3 {
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .tag {
+            background-color: #e2edea;
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .rating {
+            color: #f1c40f;
+            font-weight: bold;
+        }
+
+        /* Global UI Utility Elements */
+        button {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--secondary);
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            padding: 5px 10px;
+            font-size: 0.85rem;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        /* --- RESPONSIVE MEDIA QUERIES --- */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            section {
+                padding: 20px;
+            }
+            .controls-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">DevPortfolio</div>
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#notes">Notebook Application</a></li>
+            <li><a href="#products">Product Catalog</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <h1>Engineering Capstone Portfolio</h1>
+        <p>A unified compilation of production-ready components, data persistence, and interactive layers.</p>
+    </header>
+
+    <div class="container">
+
+        <section id="about">
+            <h2>About Me</h2>
+            <p>Welcome to my final portfolio development workspace. This interactive application acts as a sandbox displaying client-side capabilities, including dynamic array stream filtering, structural grid alignments, and browser cache data persistence architectures using standard object models.</p>
+        </section>
+
+        <section id="notes">
+            <h2>Persistent Workspace Notes</h2>
+            <div class="note-interface">
+                <textarea id="noteInput" rows="3" placeholder="Type a note you want to persist across page refreshes..."></textarea>
+                <div>
+                    <button id="saveNoteBtn">Commit Note to Cache</button>
+                </div>
+            </div>
+            <div id="notesGrid" class="notes-grid"></div>
+        </section>
+
+        <section id="products">
+            <h2>Product Hub Container</h2>
+            
+            <div class="controls-bar">
+                <div>
+                    <label for="categoryFilter">Category Filter: </label>
+                    <select id="categoryFilter">
+                        <option value="all">All Available Items</option>
+                        <option value="hardware">Hardware</option>
+                        <option value="software">Software Productivity</option>
+                        <option value="apparel">Developer Apparel</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="ratingSort">Order Metrics: </label>
+                    <select id="ratingSort">
+                        <option value="none">Default Sequence</option>
+                        <option value="high-low">Rating: High to Low</option>
+                        <option value="low-high">Rating: Low to High</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="productsGrid" class="products-grid">
+                </div>
+        </section>
+
+    </div>
+
+    <script>
+        /* ---DATA PERSISTENCE SYSTEM (LOCAL STORAGE NOTE ENGINE)---*/
+        const noteInput = document.getElementById('noteInput');
+        const saveNoteBtn = document.getElementById('saveNoteBtn');
+        const notesGrid = document.getElementById('notesGrid');
+
+        function fetchSavedNotes() {
+            const rawNotesArray = localStorage.getItem('portfolio_notes');
+            return rawNotesArray ? JSON.parse(rawNotesArray) : [];
+        }
+
+        function buildNotesUI() {
+            notesGrid.innerHTML = '';
+            const activeNotes = fetchSavedNotes();
+
+            activeNotes.forEach((noteText, currentPosition) => {
+                const noteCard = document.createElement('div');
+                noteCard.className = 'note-card';
+
+                const contentElement = document.createElement('p');
+                contentElement.textContent = noteText;
+
+                const removeBtn = document.createElement('button');
+                removeBtn.textContent = 'Delete Note';
+                removeBtn.className = 'btn-danger';
+                removeBtn.addEventListener('click', () => deleteTargetNote(currentPosition));
+
+                noteCard.appendChild(contentElement);
+                noteCard.appendChild(removeBtn);
+                notesGrid.appendChild(noteCard);
+            });
+        }
+
+        function commitNoteEntry() {
+            const currentString = noteInput.value.trim();
+            if (!currentString) return;
+
+            const trackingCollection = fetchSavedNotes();
+            trackingCollection.push(currentString);
+            localStorage.setItem('portfolio_notes', JSON.stringify(trackingCollection));
+            
+            noteInput.value = '';
+            buildNotesUI();
+        }
+
+        function deleteTargetNote(targetIndex) {
+            const updatedCollection = fetchSavedNotes();
+            updatedCollection.splice(targetIndex, 1);
+            localStorage.setItem('portfolio_notes', JSON.stringify(updatedCollection));
+            buildNotesUI();
+        }
+
+        saveNoteBtn.addEventListener('click', commitNoteEntry);
+
+
+        /* ---PRODUCT INTERACTION SYSTEM (DYNAMIC ARRAY FILTER/SORT)---*/
+        const primaryProductDataset = [
+            { id: 1, title: "Mechanical Coding Keyboard", category: "hardware", cost: 120, rating: 4.8 },
+            { id: 2, title: "Cloud Database IDE Subscription", category: "software", cost: 45, rating: 4.2 },
+            { id: 3, title: "Hexagonal Geometric Algorithm Hoodie", category: "apparel", cost: 65, rating: 4.9 },
+            { id: 4, title: "Ultra Wide 4K Monitor Arm", category: "hardware", cost: 89, rating: 4.5 },
+            { id: 5, title: "Neural Net Compiler Suite", category: "software", cost: 199, rating: 4.0 }
+        ];
+
+        const categoryFilter = document.getElementById('categoryFilter');
+        const ratingSort = document.getElementById('ratingSort');
+        const productsGrid = document.getElementById('productsGrid');
+
+        function renderProductGrid() {
+            let workingDataset = [...primaryProductDataset];
+            const targetFilterValue = categoryFilter.value;
+            const targetSortOrder = ratingSort.value;
+
+            // Apply conditional category matching filters
+            if (targetFilterValue !== 'all') {
+                workingDataset = workingDataset.filter(item => item.category === targetFilterValue);
+            }
+
+            // Apply metric sequence array rearrangements
+            if (targetSortOrder === 'high-low') {
+                workingDataset.sort((a, b) => b.rating - a.rating);
+            } else if (targetSortOrder === 'low-high') {
+                workingDataset.sort((a, b) => a.rating - b.rating);
+            }
+
+            // Flush out existing nodes and rewrite updated array matches
+            productsGrid.innerHTML = '';
+            workingDataset.forEach(item => {
+                const elementCard = document.createElement('div');
+                elementCard.className = 'product-card';
+                elementCard.innerHTML = `
+                    <div class="product-info">
+                        <h3>${item.title}</h3>
+                        <p>Premium grade development tools engineered for deployment efficiency.</p>
+                        <div class="product-meta">
+                            <span class="tag">${item.category.toUpperCase()}</span>
+                            <span class="rating">★ ${item.rating.toFixed(1)}</span>
+                        </div>
+                    </div>
+                `;
+                productsGrid.appendChild(elementCard);
+            });
+        }
+
+        categoryFilter.addEventListener('change', renderProductGrid);
+        ratingSort.addEventListener('change', renderProductGrid);
+
+        // Bootstrap App components on entry load
+        buildNotesUI();
+        renderProductGrid();
+    </script>
+</body>
+</html>
