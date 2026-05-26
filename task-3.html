@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Styling & JavaScript Task</title>
+    <style>
+        :root {
+            --bg-canvas: #f0f4f1;
+            --brand-primary: #1e4d40;
+            --brand-secondary: #2d7260;
+            --text-main: #2d3748;
+            --surface-white: #ffffff;
+            --border-light: #e2e8f0;
+            --accent-success: #27ae60;
+            --accent-error: #c0392b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .app-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            color: var(--brand-primary);
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: var(--brand-secondary);
+            font-size: 1.1rem;
+        }
+
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+        }
+
+        .panel {
+            background-color: var(--surface-white);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-light);
+        }
+
+        .panel h2 {
+            color: var(--brand-primary);
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--bg-canvas);
+        }
+
+        .quiz-question {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .options-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .option-item {
+            background-color: var(--bg-canvas);
+            border: 1px solid var(--border-light);
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-item:hover {
+            background-color: #e2edea;
+            border-color: var(--brand-secondary);
+        }
+
+        .option-item.selected {
+            background-color: var(--brand-primary);
+            color: white;
+            border-color: var(--brand-primary);
+        }
+
+        .api-card {
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .api-content {
+            font-style: italic;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .api-author {
+            text-align: right;
+            margin-top: 10px;
+            font-weight: 600;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .action-btn {
+            background-color: var(--brand-primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: var(--brand-secondary);
+        }
+
+        .action-btn:disabled {
+            background-color: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+
+        @media (max-width: 900px) {
+            body {
+                padding: 25px 15px;
+            }
+            .workspace-grid {
+                grid-template-columns: 1fr; /* Stacks panels linearly */
+                gap: 25px;
+            }
+            header h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+
+        @media (max-width: 480px) {
+            .panel {
+                padding: 20px 15px;
+            }
+            header h1 {
+                font-size: 1.5rem;
+            }
+            .quiz-question {
+                font-size: 1rem;
+            }
+            .option-item {
+                padding: 10px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <h1>Advanced Client-Side Architecture</h1>
+            <p>Task 3: Layout Breakpoints, Native Quiz Engines, and Async Data Streams</p>
+        </header>
+
+        <main class="workspace-grid">
+            
+            <section class="panel">
+                <h2>Dynamic Evaluation Module</h2>
+                <div id="quizWindow">
+                    <div class="quiz-question" id="questionBox">Loading evaluation question...</div>
+                    <ul class="options-list" id="optionsWrapper">
+                        </ul>
+                    <button class="action-btn" id="quizActionBtn" disabled>Submit Answer</button>
+                </div>
+            </section>
+
+            <section class="panel">
+                <h2>Live Stream Data Engine</h2>
+                <div class="api-card">
+                    <div id="apiDataContent" class="api-content">Connecting to external streaming service...</div>
+                    <div id="apiDataAuthor" class="api-author"></div>
+                </div>
+                <button class="action-btn" id="refreshApiBtn">Fetch Fresh Content</button>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const quizDataSource = [
+            {
+                question: "Which web architecture property allows asynchronous data exchanges without triggering global window refreshes?",
+                options: ["CSS Grid Layouts", "Asynchronous JavaScript and XML (Fetch API)", "Media Query Breakpoints", "Document Object Document Type declaration"],
+                correct: 1
+            },
+            {
+                question: "What target viewport orientation parameter is typically measured inside a standard CSS break rule?",
+                options: ["min-width", "device-pixel-ratio", "flex-direction", "root-em-scale"],
+                correct: 0
+            }
+        ];
+
+        let activeQuestionIndex = 0;
+        let runningScore = 0;
+        let electedOptionIndex = null;
+
+        const questionBox = document.getElementById('questionBox');
+        const optionsWrapper = document.getElementById('optionsWrapper');
+        const quizActionBtn = document.getElementById('quizActionBtn');
+
+        function assembleActiveQuizFrame() {
+            electedOptionIndex = null;
+            quizActionBtn.disabled = true;
+            quizActionBtn.textContent = "Submit Answer";
+            optionsWrapper.innerHTML = "";
+
+            if (activeQuestionIndex >= quizDataSource.length) {
+                renderEvaluationSummary();
+                return;
+            }
+
+            const activeDataset = quizDataSource[activeQuestionIndex];
+            questionBox.textContent = `Question ${activeQuestionIndex + 1}: ${activeDataset.question}`;
+
+            activeDataset.options.forEach((optionText, index) => {
+                const li = document.createElement('li');
+                li.className = 'option-item';
+                li.textContent = optionText;
+                li.addEventListener('click', () => registerSelectedOption(index, li));
+                optionsWrapper.appendChild(li);
+            });
+        }
+
+        function registerSelectedOption(index, element) {
+            Array.from(optionsWrapper.children).forEach(child => child.classList.remove('selected'));
+            element.classList.add('selected');
+            electedOptionIndex = index;
+            quizActionBtn.disabled = false;
+        }
+
+        quizActionBtn.addEventListener('click', () => {
+            if (electedOptionIndex === null) return;
+
+            const currentQuestion = quizDataSource[activeQuestionIndex];
+            if (electedOptionIndex === currentQuestion.correct) {
+                runningScore++;
+            }
+
+            activeQuestionIndex++;
+            assembleActiveQuizFrame();
+        });
+
+        function renderEvaluationSummary() {
+            questionBox.textContent = "Evaluation Finished!";
+            optionsWrapper.innerHTML = `<li class='option-item' style='cursor:default; background:#e2edea; font-weight:600; text-align:center;'>You scored ${runningScore} out of ${quizDataSource.length} questions correctly.</li>`;
+            quizActionBtn.style.display = 'none';
+        }
+
+
+             const contentBody = document.getElementById('apiDataContent');
+        const contentAuthor = document.getElementById('apiDataAuthor');
+        const refreshApiBtn = document.getElementById('refreshApiBtn');
+
+        async function extractLiveExternalPayload() {
+            contentBody.textContent = "Querying live data packets...";
+            contentAuthor.textContent = "";
+            refreshApiBtn.disabled = true;
+
+            try {
+                // Utilizing a robust public programming quotes API for demonstration
+                const connectionStream = await fetch('https://quoteslate.vercel.app/api/quotes/random?tags=technology');
+                
+                if (!connectionStream.ok) {
+                    throw new Error('Network protocol dropped package transfer');
+                }
+
+                const parsedData = await connectionStream.json();
+                
+                // Update DOM elements dynamically
+                contentBody.textContent = `"${parsedData.quote}"`;
+                contentAuthor.textContent = `— ${parsedData.author || 'Unknown source'}`;
+            } catch (runtimeFault) {
+                // Graceful fallback display on connection failure
+                contentBody.textContent = "Unable to complete real-time pipeline connection. Displaying system default: 'Simplicity is the soul of efficiency.'";
+                contentAuthor.textContent = "— sai";
+                console.error("Pipeline failure log:", runtimeFault);
+            } finally {
+                refreshApiBtn.disabled = false;
+            }
+        }
+
+        refreshApiBtn.addEventListener('click', extractLiveExternalPayload);
+
+        // Bootstrap App Components on execution initialization
+        assembleActiveQuizFrame();
+        extractLiveExternalPayload();
+    </script>
+</body>
+</html>
