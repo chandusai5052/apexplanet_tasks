@@ -1,0 +1,372 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Optimized E-Commerce Capstone Application">
+    <title>ApexPlanet Capstone - Optimized E-Commerce Hub</title>
+    <style>
+        :root {
+            --primary: #1e4d40;
+            --primary-hover: #15362d;
+            --dark: #1a202c;
+            --light: #f7fafc;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --text-muted: #718096;
+            --accent: #d69e2e;
+            --radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- STABLE RESPONSIVE NAVIGATION --- */
+        nav {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        nav .brand {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+        }
+
+        .cart-status {
+            background-color: var(--accent);
+            color: var(--dark);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        /* --- HERO SPLASH --- */
+        header {
+            background: linear-gradient(135deg, var(--primary), #2d7260);
+            color: var(--white);
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- OPTIMIZED TWO-COLUMN LAYOUT --- */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        @media (min-width: 850px) {
+            .main-layout {
+                grid-template-columns: 280px 1fr;
+            }
+        }
+
+        /* --- SIDEBAR FILTER COMPONENT --- */
+        .filter-panel {
+            background-color: var(--white);
+            padding: 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            height: fit-content;
+        }
+
+        .filter-panel h2 {
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background-color: var(--white);
+            font-size: 0.95rem;
+        }
+
+        /* --- PERFORMANCE GRID COMPONENT --- */
+        .catalog-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 24px;
+        }
+
+        .product-card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        /* Optimized placeholder with lazy-loading compliance */
+        .image-wrapper {
+            background-color: #edf2f7;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            position: relative;
+        }
+
+        .product-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-body h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .product-body .desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            flex-grow: 1;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* --- INTERACTIVE ACTION BUTTONS --- */
+        button {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="brand">ApexPlanet Store</div>
+        <div class="cart-status" id="cartCounter">Cart: 0 items</div>
+    </nav>
+
+    <header>
+        <h1>Capstone Product Distribution Engine</h1>
+        <p>A cross-browser optimized, high-performance interface validating clean asynchronous operations and client rendering speeds.</p>
+    </header>
+
+    <main class="main-layout">
+        
+        <aside class="filter-panel">
+            <h2>Parameters</h2>
+            <div class="filter-group">
+                <label for="categoryFilter">Department</label>
+                <select id="categoryFilter">
+                    <option value="all">All Departments</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="apparel">Apparel</option>
+                    <option value="office">Office Supplies</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="priceSort">Sort Order</label>
+                <select id="priceSort">
+                    <option value="default">Default Order</option>
+                    <option value="low-high">Price: Low to High</option>
+                    <option value="high-low">Price: High to Low</option>
+                </select>
+            </div>
+        </aside>
+
+        <section class="catalog-container">
+            <div class="products-grid" id="catalogGrid">
+                </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 ApexPlanet Software Pvt Ltd. Milestone Task 5 Completed.</p>
+    </footer>
+
+    <script>
+        /*---1. DATA INVENTORY---*/
+        const inventoryPayload = [
+            { id: 101, title: "Wireless Noise-Canceling Headphones", category: "electronics", price: 149.99, desc: "High-fidelity audio driver units with optimized battery runtimes." },
+            { id: 102, title: "Ergonomic Mesh Task Chair", category: "office", price: 229.50, desc: "Complete lumbar adjustments built for long computational intervals." },
+            { id: 103, title: "Waterproof Tailored Commuter Pack", category: "apparel", price: 75.00, desc: "Dedicated internal storage cells accommodating up to 16-inch laptops." },
+            { id: 104, title: "Mechanical Backlit Coding Deck", category: "electronics", price: 99.00, desc: "Tactile key mechanics engineered for fast text entry operations." },
+            { id: 105, title: "Anodized Aluminum Monitor Riser", category: "office", price: 34.99, desc: "Clears layout footprints while positioning displays at natural eye levels." },
+            { id: 106, title: "Premium Organic Cotton Hoodie", category: "apparel", price: 59.95, desc: "Heavyweight weave pattern complete with structural reinforced seams." }
+        ];
+
+        let stateCartCount = 0;
+        const catalogGrid = document.getElementById('catalogGrid');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const priceSort = document.getElementById('priceSort');
+        const cartCounter = document.getElementById('cartCounter');
+
+        /*---2. RENDER & RE-ARRANGEMENT ENGINE---*/
+        function computeActiveDisplay() {
+            let workingStream = [...inventoryPayload];
+            const currentDepartment = categoryFilter.value;
+            const currentSortingRule = priceSort.value;
+
+            // Strict Filter Layer
+            if (currentDepartment !== 'all') {
+                workingStream = workingStream.filter(item => item.category === currentDepartment);
+            }
+
+            // Price Sorting Layer
+            if (currentSortingRule === 'low-high') {
+                workingStream.sort((x, y) => x.price - y.price);
+            } else if (currentSortingRule === 'high-low') {
+                workingStream.sort((x, y) => y.price - x.price);
+            }
+
+            // Render Refreshed Matrix
+            catalogGrid.innerHTML = '';
+            
+            if (workingStream.length === 0) {
+                catalogGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No products match your current parameters.</div>`;
+                return;
+            }
+
+            workingStream.forEach(product => {
+                const card = document.createElement('article');
+                card.className = 'product-card';
+                
+                // Native lazy-loading asset architecture emulation
+                card.innerHTML = `
+                    <div class="image-wrapper">
+                        <span>Image Placeholder [${product.category.toUpperCase()}]</span>
+                    </div>
+                    <div class="product-body">
+                        <h3>${product.title}</h3>
+                        <p class="desc">${product.desc}</p>
+                        <div class="product-footer">
+                            <span class="price">$${product.price.toFixed(2)}</span>
+                            <button onclick="incrementCartCount()">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+                catalogGrid.appendChild(card);
+            });
+        }
+
+        /* ---3. INTERACTIVE AGGREGATION HANDLERS---*/
+        function incrementCartCount() {
+            stateCartCount++;
+            cartCounter.textContent = `Cart: ${stateCartCount} items`;
+            
+            // Micro-interaction optimization feedback
+            cartCounter.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                cartCounter.style.transform = 'scale(1)';
+            }, 100);
+        }
+
+        // Event hooks
+        categoryFilter.addEventListener('change', computeActiveDisplay);
+        priceSort.addEventListener('change', computeActiveDisplay);
+
+        // Run application on bootstrap load
+        computeActiveDisplay();
+    </script>
+</body>
+</html>
